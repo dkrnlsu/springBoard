@@ -2,8 +2,13 @@ package myboard.controller;
 
 import myboard.entity.Board;
 import myboard.repository.BoardRepository;
+import myboard.validator.BoardInsertValidator;
+import myboard.validator.BoardUpdateValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,6 +33,13 @@ public class BoardController {
 
     @Autowired
     BoardRepository boardRepository;
+
+    private MessageSource msgSrc;
+    Locale locale = Locale.KOREA;
+
+    public void AccountsController(MessageSource msgSrc) {
+        this.msgSrc = msgSrc;
+    }
 
     @RequestMapping(value = "/board/list", method=RequestMethod.GET)
     public ModelAndView boardList(HttpServletRequest request) {
@@ -56,12 +69,20 @@ public class BoardController {
     }
 
     @RequestMapping(value = "/board/save", method = RequestMethod.POST)
-    public String save(HttpServletRequest request, Board board) {
+    public String save(HttpServletRequest request,
+                       @ModelAttribute Board board,
+                       BindingResult result) {
         // 로그인 체크하여 비로그인시 로그인창으로 이동
         HttpSession session = request.getSession();
         if(session.getAttribute("isLogin") == null) {
             return "redirect:/board/loginForm";
         } else {
+            new BoardInsertValidator().validate(board, result);
+            if (result.hasErrors()) {
+                System.out.println(result);
+                return "insertForm";
+            }
+
             //데이터 저장
             boardRepository.addBoard(board);
 
@@ -80,11 +101,7 @@ public class BoardController {
             modelAndView.setViewName("redirect:/board/list");
         } else {
             modelAndView.setViewName("detail");
-            modelAndView.addObject("id", board.getId());
-            modelAndView.addObject("title", board.getTitle());
-            modelAndView.addObject("content", board.getContent());
-            modelAndView.addObject("writer", board.getWriter());
-            modelAndView.addObject("pw", board.getPw());
+            modelAndView.addObject("board",board);
         }
         return modelAndView;
     }
@@ -106,23 +123,26 @@ public class BoardController {
                 modelAndView.setViewName("redirect:/board/list");
             } else {
                 modelAndView.setViewName("updateForm");
-                modelAndView.addObject("id",board.getId());
-                modelAndView.addObject("title",board.getTitle());
-                modelAndView.addObject("content",board.getContent());
-                modelAndView.addObject("writer",board.getWriter());
-                modelAndView.addObject("pw",board.getPw());
+                modelAndView.addObject("board",board);
             }
         }
         return modelAndView;
     }
 
     @RequestMapping(value = "/board/update", method=RequestMethod.POST)
-    public String update(HttpServletRequest request, Board board) {
+    public String update(HttpServletRequest request,
+                         @ModelAttribute Board board,
+                         BindingResult result) {
         // 로그인 체크하여 비로그인시 로그인창으로 이동
         HttpSession session = request.getSession();
         if(session.getAttribute("isLogin") == null) {
             return "redirect:/board/loginForm";
         } else {
+            new BoardUpdateValidator().validate(board, result);
+            if (result.hasErrors()) {
+                System.out.println(result);
+                return "updateForm";
+            }
             //데이터 업데이트
             boardRepository.updateBoard(board);
 

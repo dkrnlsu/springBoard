@@ -23,24 +23,24 @@
   <body>
   <p>게시글 보기</p>
   <form name=form method="post" action="/board/delete" onsubmit="return checkText(this)">
-   <input type="hidden" name="id" value="${id}">
+   <input type="hidden" name="id" value="${board.id}">
    <table border=1 width="600">
        <tr>
            <td width="100">title</td>
-           <td width="500">${title}</td>
+           <td width="500">${board.title}</td>
        </tr>
        <tr>
            <td width="100">content</td>
-           <td width="500"><textarea name="content" cols="50" rows="5" readonly>${content}</textarea></td>
+           <td width="500"><textarea name="content" cols="50" rows="5" readonly>${board.content}</textarea></td>
        </tr>
        <tr>
            <td width="100">writer</td>
-           <td width="500">${writer}</td>
+           <td width="500">${board.writer}</td>
        </tr>
    </table>
    <br>
    <input type="button" value="리스트" onclick="location.href='/board/list'">
-   <input type="button" value="수정" onclick="location.href='/board/updateForm?id=${id}'">
+   <input type="button" value="수정" onclick="location.href='/board/updateForm?id=${board.id}'">
    pw : <input type="password" name="pw" length="10"> <input type="submit" value="삭제">
    </form>
   <%@ include file="/board/footer.jsp"%>

@@ -117,7 +117,6 @@ public class BoardDbRepository implements BoardRepository {
             pstmt.setString(2, updateBoard.getWriter());
             pstmt.setString(3, updateBoard.getPw());
             pstmt.setString(4, updateBoard.getContent());
-            pstmt.setString(4, updateBoard.getContent());
             pstmt.setInt(5, updateBoard.getId());
             pstmt.executeUpdate();
         } catch(SQLException se) {

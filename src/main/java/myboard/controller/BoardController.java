@@ -7,6 +7,7 @@ import myboard.validator.BoardUpdateValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,144 +35,112 @@ public class BoardController {
     @Autowired
     BoardRepository boardRepository;
 
-    private MessageSource msgSrc;
+   /* private MessageSource msgSrc;
     Locale locale = Locale.KOREA;
 
     public void AccountsController(MessageSource msgSrc) {
         this.msgSrc = msgSrc;
-    }
+    }*/
 
     @RequestMapping(value = "/board/list", method=RequestMethod.GET)
-    public ModelAndView boardList(HttpServletRequest request) {
+    public String boardList(HttpServletRequest request, Model model) {
         if (request.getServletContext().getAttribute("loginCount") == null) {
             request.getServletContext().setAttribute("loginCount", 0);
         }
         int loginCount = (Integer) request.getServletContext().getAttribute("loginCount");
 
-        //1. model에서 데이터 조회
+        // 데이터 조회
         List<Board> boards = boardRepository.getBoards();
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("boardList");
-        modelAndView.addObject("boards", boards);
-        modelAndView.addObject("loginCount", loginCount);
-        return modelAndView;
+        model.addAttribute("boards", boards);
+        model.addAttribute("loginCount", loginCount);
+        return "boardList";
     }
 
     @RequestMapping(value = "/board/insertForm", method=RequestMethod.GET)
-    public String insertForm(HttpServletRequest request) {
-        // 로그인 체크하여 비로그인시 로그인창으로 이동
-        HttpSession session = request.getSession();
-        if(session.getAttribute("isLogin") == null) {
-            return "redirect:/board/loginForm";
-        } else {
-            return "insertForm";
-        }
+    public String insertForm(HttpServletRequest request, HttpSession session) {
+        return "insertForm";
     }
 
     @RequestMapping(value = "/board/save", method = RequestMethod.POST)
     public String save(HttpServletRequest request,
+                       HttpSession session,
                        @ModelAttribute Board board,
                        BindingResult result) {
-        // 로그인 체크하여 비로그인시 로그인창으로 이동
-        HttpSession session = request.getSession();
-        if(session.getAttribute("isLogin") == null) {
-            return "redirect:/board/loginForm";
-        } else {
-            new BoardInsertValidator().validate(board, result);
-            if (result.hasErrors()) {
-                System.out.println(result);
-                return "insertForm";
-            }
-
-            //데이터 저장
-            boardRepository.addBoard(board);
-
-            //list로 이동
-            return "redirect:/board/list";
+        new BoardInsertValidator().validate(board, result);
+        if (result.hasErrors()) {
+            System.out.println(result);
+            return "insertForm";
         }
+        //데이터 저장
+        boardRepository.addBoard(board);
+        //list로 이동
+        return "redirect:/board/list";
+
     }
 
     @RequestMapping(value = "/board/detail", method=RequestMethod.GET)
-    public ModelAndView detail(HttpServletRequest request, @RequestParam(value="id") int id) {
-        //1. model에서 데이터 조회
+    public String detail(Model model, @RequestParam(value="id") Integer id) {
+        //1. 데이터 조회
         Board board = boardRepository.getBoard(id);
-        ModelAndView modelAndView = new ModelAndView();
-        //2. request에 데이터 셋팅
+        //2. 데이터 셋팅
         if (board == null) {
-            modelAndView.setViewName("redirect:/board/list");
-        } else {
-            modelAndView.setViewName("detail");
-            modelAndView.addObject("board",board);
+            return "redirect:/board/list";
         }
-        return modelAndView;
+        model.addAttribute("board",board);
+        return "detail";
     }
 
     @RequestMapping(value = "/board/updateForm", method=RequestMethod.GET)
-    public ModelAndView  updateForm(HttpServletRequest request, @RequestParam(value="id") int id) {
-        // 로그인 체크하여 비로그인시 로그인창으로 이동
-        HttpSession session = request.getSession();
-        ModelAndView modelAndView = new ModelAndView();
+    public String  updateForm(HttpServletRequest request,
+                              HttpSession session,
+                              Model model,
+                              @RequestParam(value="id") Integer id) {
+        //1. model에서 데이터 조회
+        Board board = boardRepository.getBoard(id);
 
-        if(session.getAttribute("isLogin") == null) {
-            modelAndView.setViewName("redirect:/board/loginForm");
-        } else {
-            //1. model에서 데이터 조회
-            Board board = boardRepository.getBoard(id);
-
-            //2. request에 데이터 셋팅
-            if (board == null) {
-                modelAndView.setViewName("redirect:/board/list");
-            } else {
-                modelAndView.setViewName("updateForm");
-                modelAndView.addObject("board",board);
-            }
+        //2. request에 데이터 셋팅
+        if (board == null) {
+            return "redirect:/board/list";
         }
-        return modelAndView;
+        model.addAttribute("board",board);
+        return "updateForm";
     }
 
     @RequestMapping(value = "/board/update", method=RequestMethod.POST)
     public String update(HttpServletRequest request,
+                         HttpSession session,
                          @ModelAttribute Board board,
                          BindingResult result) {
-        // 로그인 체크하여 비로그인시 로그인창으로 이동
-        HttpSession session = request.getSession();
-        if(session.getAttribute("isLogin") == null) {
-            return "redirect:/board/loginForm";
-        } else {
-            new BoardUpdateValidator().validate(board, result);
-            if (result.hasErrors()) {
-                System.out.println(result);
-                return "updateForm";
-            }
-            //데이터 업데이트
-            boardRepository.updateBoard(board);
-
-            //list로 이동
-            return "redirect:/board/list";
+         new BoardUpdateValidator().validate(board, result);
+        if (result.hasErrors()) {
+            System.out.println(result);
+            return "updateForm";
         }
+        //데이터 업데이트
+        boardRepository.updateBoard(board);
+        //list로 이동
+        return "redirect:/board/list";
     }
 
     @RequestMapping(value = "/board/delete", method=RequestMethod.POST)
-    public String delete(HttpServletRequest request, @RequestParam(value="id") int id, @RequestParam(value="pw") String pw) {
-        // 로그인 체크하여 비로그인시 로그인창으로 이동
-        HttpSession session = request.getSession();
-        if(session.getAttribute("isLogin") == null) {
-            return "redirect:/board/loginForm";
-        } else {
-            boardRepository.deleteBoard(id, pw);
-
-            //list로 이동
-            return "redirect:/board/list";
-        }
+    public String delete(HttpServletRequest request,
+                         HttpSession session,
+                         @RequestParam(value="id") Integer id,
+                         @RequestParam(value="pw") String pw) {
+        boardRepository.deleteBoard(id, pw);
+        //list로 이동
+        return "redirect:/board/list";
     }
 
-    @RequestMapping(value = "/board/loginForm", method=RequestMethod.GET)
+    @RequestMapping(value = "/login/loginForm", method=RequestMethod.GET)
     public String loginForm() {
-        return "/loginForm";
+        return "loginForm";
     }
 
-    @RequestMapping(value = "/board/login", method=RequestMethod.POST)
-    public String login(HttpServletRequest request, HttpServletResponse response,
+    @RequestMapping(value = "/login/login", method=RequestMethod.POST)
+    public String login(HttpServletRequest request,
+                        HttpServletResponse response,
+                        HttpSession session,
                         @RequestParam(value="id") String id,
                         @RequestParam(value="password") String password,
                         @RequestParam(value="idsave") String idsave) {
@@ -181,7 +150,6 @@ public class BoardController {
 
         // 사용자 정보와 디폴트 로그인 정보가 일치하는 경우 isLogin 세션 생성
         if (id.equals(defaultId) && password.equals(defaultPassword)) {
-            HttpSession session = request.getSession();
             session.setAttribute("isLogin", true);
 
             //접속자수 추가
@@ -211,15 +179,13 @@ public class BoardController {
             }
             return "redirect:/board/list";
             // 사용자 정보와 디폴트 로그인 정보가 불일치하는 경우 다시 로그인폼으로 이동
-        } else {
-            return "redirect:/board/loginForm";
         }
+        return "redirect:/login/loginForm";
     }
 
-    @RequestMapping(value = "/board/logout", method=RequestMethod.GET)
-    public String logout(HttpServletRequest request) {
+    @RequestMapping(value = "/login/logout", method=RequestMethod.GET)
+    public String logout(HttpServletRequest request, HttpSession session) {
         // 세션정보 소멸
-        HttpSession session = request.getSession();
         session.invalidate();
 
         //접속자수 빼기
@@ -228,7 +194,6 @@ public class BoardController {
         } else {
             request.getServletContext().setAttribute("loginCount", ((Integer) request.getServletContext().getAttribute("loginCount")) - 1);
         }
-
         //list로 이동
         return "redirect:/board/list";
     }

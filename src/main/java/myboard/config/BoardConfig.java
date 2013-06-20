@@ -1,5 +1,7 @@
 package myboard.config;
 
+import myboard.controller.BoardController;
+import myboard.interceptor.BoardInterceptor;
 import myboard.repository.BoardMemoryRepository;
 import myboard.repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +9,9 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
@@ -29,7 +31,24 @@ public class BoardConfig extends WebMvcConfigurerAdapter{
 
     @Bean
     public BoardRepository boardRepository() {
+
         return new BoardMemoryRepository();
+    }
+
+    @Bean
+    public BoardInterceptor boardInterceptor() {
+        return new BoardInterceptor();
+    }
+
+    @Bean
+    public BoardController boardController() {
+        return new BoardController();
+    }
+
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(boardInterceptor()).addPathPatterns("/board/**");
     }
 
     @Bean
@@ -43,9 +62,10 @@ public class BoardConfig extends WebMvcConfigurerAdapter{
     @Bean
     public MessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasename("/messages/validation");
+        messageSource.setBasename("validation");
         return messageSource;
     }
+
 
 /*
     @Bean

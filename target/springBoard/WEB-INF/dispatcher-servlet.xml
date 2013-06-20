@@ -1,9 +1,10 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
  <!--   <context:component-scan base-package="myboard"/>
 
@@ -12,4 +13,56 @@
         <property name="suffix" value=".jsp"/>
     </bean>-->
 
+
+<!--
+        <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+            <property name="interceptors">
+                <bean class="myboard.interceptor.BoardInterceptor"/>
+            </property>
+        </bean>
+-->
+<!--    <bean id="boardInterceptor" class="myboard.interceptor.BoardInterceptor"></bean>
+    <bean id="simpleUrlHandlerMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="interceptors">
+            <list>
+                <ref bean="boardInterceptor"></ref>
+            </list>
+        </property>
+       &lt;!&ndash; <property name="alwaysUseFullPath" value="true" />&ndash;&gt;
+        <property name="mappings">
+            <props>
+                <prop key="/board/detail">boardController</prop>
+                <prop key="/board/insertForm">boardController</prop>
+            </props>
+        </property>
+
+    </bean>-->
+
+<!--    <bean id="boardInterceptor" class="myboard.interceptor.BoardInterceptor"></bean>
+    <bean id="boardController" class="myboard.controller.BoardController"></bean>
+
+
+
+    <bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping">
+        <property name="interceptors">
+            <list>
+                <ref bean="boardInterceptor" />
+            </list>
+        </property>
+    </bean>
+    <bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping">
+        <property name="interceptors">
+            <list>
+                <ref bean="boardInterceptor"   />
+            </list>
+        </property>
+    </bean>-->
+<!--
+        <mvc:annotation-driven/>
+        <mvc:interceptors>
+            <mvc:interceptor>
+                <mvc:mapping path="/board/*"/>
+                <bean class="myboard.interceptor.BoardInterceptor" />
+            </mvc:interceptor>
+        </mvc:interceptors>-->
 </beans>

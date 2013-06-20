@@ -22,7 +22,7 @@
   </head>
   <body>
   <p>로그인</p>
-  <form name=form method="post" action="/board/login" onsubmit="return checkText(this)">
+  <form name=form method="post" action="/login/login" onsubmit="return checkText(this)">
    <table border=1 width="600">
        <tr>
            <td width="100">ID</td>

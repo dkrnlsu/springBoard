@@ -10,10 +10,10 @@
   </head>
   <body>
   <c:if test="${sessionScope.isLogin eq true}">
-    <a href="/board/logout">로그아웃</a>
+    <a href="/login/logout">로그아웃</a>
   </c:if>
   <c:if test="${sessionScope.isLogin eq null || sessionScope.isLogin eq false}">
-    <a href="/board/loginForm">로그인</a>
+    <a href="/login/loginForm">로그인</a>
   </c:if>
   | 접속자수 : ${loginCount}
   <br><br>

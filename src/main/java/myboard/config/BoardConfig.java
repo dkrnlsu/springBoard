@@ -2,6 +2,7 @@ package myboard.config;
 
 import myboard.controller.BoardController;
 import myboard.interceptor.BoardInterceptor;
+import myboard.repository.BoardDbRepository;
 import myboard.repository.BoardMemoryRepository;
 import myboard.repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class BoardConfig extends WebMvcConfigurerAdapter{
     @Bean
     public BoardRepository boardRepository() {
 
-        return new BoardMemoryRepository();
+        return new BoardDbRepository();
     }
 
     @Bean

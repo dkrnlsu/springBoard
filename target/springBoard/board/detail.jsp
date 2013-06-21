@@ -1,3 +1,4 @@
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="java.util.List" %>
 <%@ page import="myboard.entity.Board" %>
@@ -22,8 +23,8 @@
   </head>
   <body>
   <p>게시글 보기</p>
-  <form name=form method="post" action="/board/delete" onsubmit="return checkText(this)">
-   <input type="hidden" name="id" value="${board.id}">
+  <form:form commandName="board" action="/board/delete" method="POST" onsubmit="return checkText(this)">
+   <form:hidden path="id" />
    <table border=1 width="600">
        <tr>
            <td width="100">title</td>
@@ -31,7 +32,7 @@
        </tr>
        <tr>
            <td width="100">content</td>
-           <td width="500"><textarea name="content" cols="50" rows="5" readonly>${board.content}</textarea></td>
+           <td width="500"><form:textarea path="content" cols="50" rows="5" readonly="true" /></td>
        </tr>
        <tr>
            <td width="100">writer</td>
@@ -41,8 +42,8 @@
    <br>
    <input type="button" value="리스트" onclick="location.href='/board/list'">
    <input type="button" value="수정" onclick="location.href='/board/updateForm?id=${board.id}'">
-   pw : <input type="password" name="pw" length="10"> <input type="submit" value="삭제">
-   </form>
+   pw : <form:password path="pw" length="10" /> <input type="submit" value="삭제">
+   </form:form>
   <%@ include file="/board/footer.jsp"%>
   </body>
 </html>

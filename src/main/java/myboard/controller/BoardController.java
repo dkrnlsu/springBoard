@@ -84,7 +84,6 @@ public class BoardController {
                               @RequestParam(value="id") Integer id) {
         //1. model에서 데이터 조회
         Board board = boardRepository.getBoard(id);
-
         //2. request에 데이터 셋팅
         if (board == null) {
             return "redirect:/board/list";

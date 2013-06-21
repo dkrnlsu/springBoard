@@ -13,7 +13,10 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+
+import java.util.Properties;
 
 /**
  * Created with IntelliJ IDEA.
@@ -66,7 +69,16 @@ public class BoardConfig extends WebMvcConfigurerAdapter{
         return messageSource;
     }
 
+    @Bean
+    public SimpleMappingExceptionResolver simpleMappingExceptionResolver(){
+        SimpleMappingExceptionResolver exceptionResolver = new SimpleMappingExceptionResolver();
+        Properties props = new Properties();
+        props.setProperty("java.lang.Exception", "/error/error");
+        props.setProperty("java.lang.Throwable", "/error/error");
+        exceptionResolver.setExceptionMappings(props);
+        return exceptionResolver;
 
+    }
 /*
     @Bean
     public ReloadableResourceBundleMessageSource messageSource() {

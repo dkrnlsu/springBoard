@@ -5,22 +5,16 @@ import myboard.repository.BoardRepository;
 import myboard.validator.BoardInsertValidator;
 import myboard.validator.BoardUpdateValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created with IntelliJ IDEA.
@@ -34,13 +28,6 @@ public class BoardController {
 
     @Autowired
     BoardRepository boardRepository;
-
-   /* private MessageSource msgSrc;
-    Locale locale = Locale.KOREA;
-
-    public void AccountsController(MessageSource msgSrc) {
-        this.msgSrc = msgSrc;
-    }*/
 
     @RequestMapping(value = "/board/list", method=RequestMethod.GET)
     public String boardList(HttpServletRequest request, Model model) {
@@ -197,4 +184,14 @@ public class BoardController {
         //list로 이동
         return "redirect:/board/list";
     }
+
+    @RequestMapping(value = "/exceptionTest", method=RequestMethod.GET)
+    public void exceptionTest() throws Exception {
+        throw new Exception("test");
+    }
+
+/*    @ExceptionHandler(Exception.class)
+    public String handleException(Exception ex){
+        return "/error/error";
+    }*/
 }

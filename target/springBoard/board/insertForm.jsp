@@ -30,19 +30,19 @@
    <table border=1 width="600">
        <tr>
            <td width="100">title</td>
-           <td width="500"><input type="text" name="title" length="50" value="${board.title}"> <form:errors path="board.title" /></td>
+           <td width="500"><form:input path="board.title" length="50" /> <form:errors path="board.title" /></td>
        </tr>
        <tr>
            <td width="100">content</td>
-           <td width="500"><textarea name="content" cols="50" rows="5">${board.content}</textarea> <form:errors path="board.content" /></td>
+           <td width="500"><form:textarea path="content" cols="50" rows="5" /> <form:errors path="content" /></td>
        </tr>
        <tr>
            <td width="100">writer</td>
-           <td width="500"><input type="text" name="writer" length="50" value="${board.writer}"> <form:errors path="board.writer" /></td>
+           <td width="500"><form:input path="writer" length="50" /> <form:errors path="writer" /></td>
        </tr>
        <tr>
            <td width="100">pw</td>
-           <td width="500"><input type="password" name="pw" length="50" value="${board.pw}"> <form:errors path="board.pw" /></td>
+           <td width="500"><form:password path="pw" length="50" /> <form:errors path="pw" /></td>
        </tr>
    </table>
       <br>

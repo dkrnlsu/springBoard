@@ -44,15 +44,12 @@ public class BoardController {
     }
 
     @RequestMapping(value = "/board/insertForm", method=RequestMethod.GET)
-    public String insertForm(HttpServletRequest request, HttpSession session) {
+    public String insertForm() {
         return "insertForm";
     }
 
     @RequestMapping(value = "/board/save", method = RequestMethod.POST)
-    public String save(HttpServletRequest request,
-                       HttpSession session,
-                       @ModelAttribute Board board,
-                       BindingResult result) {
+    public String save(@ModelAttribute Board board, BindingResult result) {
         new BoardInsertValidator().validate(board, result);
         if (result.hasErrors()) {
             System.out.println(result);
@@ -78,10 +75,7 @@ public class BoardController {
     }
 
     @RequestMapping(value = "/board/updateForm", method=RequestMethod.GET)
-    public String  updateForm(HttpServletRequest request,
-                              HttpSession session,
-                              Model model,
-                              @RequestParam(value="id") Integer id) {
+    public String  updateForm(Model model, @RequestParam(value="id") Integer id) {
         //1. model에서 데이터 조회
         Board board = boardRepository.getBoard(id);
         //2. request에 데이터 셋팅
@@ -93,11 +87,8 @@ public class BoardController {
     }
 
     @RequestMapping(value = "/board/update", method=RequestMethod.POST)
-    public String update(HttpServletRequest request,
-                         HttpSession session,
-                         @ModelAttribute Board board,
-                         BindingResult result) {
-         new BoardUpdateValidator().validate(board, result);
+    public String update(@ModelAttribute Board board, BindingResult result) {
+        new BoardUpdateValidator().validate(board, result);
         if (result.hasErrors()) {
             System.out.println(result);
             return "updateForm";
@@ -109,10 +100,7 @@ public class BoardController {
     }
 
     @RequestMapping(value = "/board/delete", method=RequestMethod.POST)
-    public String delete(HttpServletRequest request,
-                         HttpSession session,
-                         @RequestParam(value="id") Integer id,
-                         @RequestParam(value="pw") String pw) {
+    public String delete(@RequestParam(value="id") Integer id, @RequestParam(value="pw") String pw) {
         boardRepository.deleteBoard(id, pw);
         //list로 이동
         return "redirect:/board/list";

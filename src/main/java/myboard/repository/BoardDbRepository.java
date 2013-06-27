@@ -41,7 +41,6 @@ public class BoardDbRepository implements BoardRepository {
                     board.setWriter(rs.getString("writer"));
                     board.setPw(rs.getString("pw"));
                     board.setContent(rs.getString("content"));
-                    System.out.println(rs.getString("id"));
                     return board;
                 }
 
@@ -77,7 +76,6 @@ public class BoardDbRepository implements BoardRepository {
                         board.setWriter(rs.getString("writer"));
                         board.setPw(rs.getString("pw"));
                         board.setContent(rs.getString("content"));
-                        System.out.println(rs.getString("id"));
                         return board;
                     }
 

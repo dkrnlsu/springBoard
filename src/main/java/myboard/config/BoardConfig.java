@@ -11,12 +11,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import javax.sql.DataSource;
 import java.util.Properties;
 
 /**
@@ -35,8 +37,7 @@ public class BoardConfig extends WebMvcConfigurerAdapter{
 
     @Bean
     public BoardRepository boardRepository() {
-
-        return new BoardDbRepository();
+        return new BoardDbRepository(psqlDataSource());
     }
 
     @Bean
@@ -70,7 +71,7 @@ public class BoardConfig extends WebMvcConfigurerAdapter{
         return messageSource;
     }
 
-    @Bean
+/*    @Bean
     public SimpleMappingExceptionResolver simpleMappingExceptionResolver(){
         SimpleMappingExceptionResolver exceptionResolver = new SimpleMappingExceptionResolver();
         Properties props = new Properties();
@@ -79,7 +80,19 @@ public class BoardConfig extends WebMvcConfigurerAdapter{
         exceptionResolver.setExceptionMappings(props);
         return exceptionResolver;
 
+    }*/
+
+    @Bean
+    public DataSource psqlDataSource (){
+        SimpleDriverDataSource dataSource = new SimpleDriverDataSource( );
+        dataSource.setDriverClass(org.postgresql.Driver.class);
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/BOARD");
+        dataSource.setUsername("board");
+        dataSource.setPassword("board");
+
+        return dataSource;
     }
+
 /*
     @Bean
     public ReloadableResourceBundleMessageSource messageSource() {

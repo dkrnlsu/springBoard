@@ -72,6 +72,19 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Spring JDBC -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <!--  postgresql driver -->
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.1-901-1.jdbc4</version>
+        </dependency>
+
         <!-- aop -->
         <dependency>
             <groupId>org.springframework</groupId>

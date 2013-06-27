@@ -71,7 +71,7 @@ public class BoardConfig extends WebMvcConfigurerAdapter{
         return messageSource;
     }
 
-/*    @Bean
+    @Bean
     public SimpleMappingExceptionResolver simpleMappingExceptionResolver(){
         SimpleMappingExceptionResolver exceptionResolver = new SimpleMappingExceptionResolver();
         Properties props = new Properties();
@@ -80,7 +80,7 @@ public class BoardConfig extends WebMvcConfigurerAdapter{
         exceptionResolver.setExceptionMappings(props);
         return exceptionResolver;
 
-    }*/
+    }
 
     @Bean
     public DataSource psqlDataSource (){
